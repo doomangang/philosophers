@@ -1,0 +1,125 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
+/*   Updated: 2024/08/15 21:27:10 by jihyjeon         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include "philo.h"
+
+int	main(int ac, char **av)
+{
+	t_arg	arg;
+	t_philo	*philo;
+	t_share	share;
+
+	if (ac < 5 || ac > 6)
+		return (0);
+	if (!valid_input(av))
+		return (0);
+	memset(&arg, 0, sizeof(t_arg));
+	if (!set_arg(ac, av, &arg))
+		return (0);
+	if (!mutex_init(share, arg.philo_num))
+		return (0);
+	if (!philo_init(philo, &arg, &share))
+		return (0);
+	if (arg.philo_num == 1)
+		return (one_philo(philo));
+	if (!thread_init(philo))
+		return (0);
+	exit_process(philo);
+	return (0);
+}
+
+int	valid_input(char **av)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (av[i])
+	{
+		while (av[i][j])
+		{
+			if (av[i][j] == ' ')
+			{
+				j++;
+				continue ;
+			}
+			if (!(av[i][j] >= 48 && av[i][j] <= 57))
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
+
+int	set_arg(int ac, char **av, t_arg *arg)
+{
+	arg->philo_num = ft_atoi(av[1]);
+	arg->die_time = ft_atoi(av[2]);
+	arg->eat_time = ft_atoi(av[3]);
+	arg->sleep_time = ft_atoi(av[4]);
+	arg->must_eat = 0;
+	if (ac == 6)
+	{
+		arg->must_eat = ft_atoi(av[5]);
+		if (arg->must_eat < 0)
+			return (0);
+	}
+	if (arg->philo_num <= 0 || arg->die_time < 0 || \
+		arg->eat_time < 0 || arg->sleep_time < 0)
+		return (0);
+	return (1);
+}
+
+int	mutex_init(t_share share, int num)
+{
+	int	i;
+
+	if (!pthread_mutex_init(share.print, NULL))
+		return (0);
+	share.fork = (pthread_mutex_t *)malloc(sizeof(num));
+	if (!share.fork)
+		return (0); //free arg(memset) and print?
+	i = 0;
+	while (i < num)
+	{
+		pthread_mutex_init(&(share.fork[i]), NULL);
+		if (!&(share.fork[i]))
+			return (0);
+		i++;
+	}
+	share.end_flag = 0;
+	return (1);
+}
+
+int	philo_init(t_philo *philo, t_arg *arg, t_share *share)
+{
+	int	i;
+
+	philo = (t_philo *)malloc(sizeof(t_philo) * arg->philo_num);
+	if (!philo)
+		return (0);
+	i = 0;
+	while (i < arg->philo_num)
+	{
+		philo[i].num = i;
+		philo[i].l_fork = i;
+		philo[i].r_fork = (i + 1) % arg->philo_num;
+		philo[i].die_time = 0;
+		philo[i].eat_count = 0;
+		philo[i].arg = arg;
+		philo[i].share = share;
+		i++;
+	}
+	return (1);
+}
