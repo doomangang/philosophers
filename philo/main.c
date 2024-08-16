@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/16 18:09:52 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/16 21:30:53 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	main(int ac, char **av)
 {
 	t_arg	arg;
-	t_philo	*philo;
 	t_share	share;
 
 	if (ac < 5 || ac > 6)
@@ -24,16 +23,41 @@ int	main(int ac, char **av)
 		return (0);
 	if (!set_arg(ac, av, &arg))
 		return (0);
-	if (!mutex_init(&share, arg.philo_num))
+	if (!mutex_init(&share, &arg))
 		return (0);
-	if (!philo_init(philo, &arg, &share))
+	if (!philo_init(&share))
 		return (0);
 	if (arg.philo_num == 1)
-		return (one_philo(philo));
-	if (!thread_init(philo))
+		return (one_philo(&share));
+	if (!philo(&share))
 		return (0);
-	exit_process(philo);
+	exit_process(&share);
 	return (0);
+}
+
+int	valid_input(char **av)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (av[i])
+	{
+		while (av[i][j])
+		{
+			if (av[i][j] == ' ')
+			{
+				j++;
+				continue ;
+			}
+			if (!(av[i][j] >= 48 && av[i][j] <= 57))
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
 }
 
 int	set_arg(int ac, char **av, t_arg *arg)
@@ -43,7 +67,6 @@ int	set_arg(int ac, char **av, t_arg *arg)
 	arg->die_time = ft_atoi(av[2]);
 	arg->eat_time = ft_atoi(av[3]);
 	arg->sleep_time = ft_atoi(av[4]);
-	arg->must_eat = 0;
 	if (ac == 6)
 	{
 		arg->must_eat = ft_atoi(av[5]);
@@ -56,16 +79,17 @@ int	set_arg(int ac, char **av, t_arg *arg)
 	return (1);
 }
 
-int	mutex_init(t_share *share, int num)
+int	mutex_init(t_share *share, t_arg *arg)
 {
 	int	i;
+	int	num;
 
-	memset(share, 0, sizeof(t_share));
-	if (!pthread_mutex_init(share->print, NULL))
+	if (!pthread_mutex_init(&(share->print), NULL))
 		return (0);
-	share->fork = (pthread_mutex_t *)malloc(sizeof(num));
+	num = arg->philo_num;
+	share->fork = (pthread_mutex_t *)malloc(num * sizeof(pthread_mutex_t));
 	if (!share->fork)
-		return (0); //free arg(memset) and print?
+		return (0);
 	i = 0;
 	while (i < num)
 	{
@@ -74,29 +98,29 @@ int	mutex_init(t_share *share, int num)
 			return (0);
 		i++;
 	}
-	share->end_flag = false;
-	share->start_time = get_time();
+	share->arg = arg;
+	share->end_flag = 0;
 	return (1);
 }
 
-int	philo_init(t_philo *philo, t_arg *arg, t_share *share)
+int	philo_init(t_share *share)
 {
 	int	i;
 
-	philo = (t_philo *)malloc(sizeof(t_philo) * arg->philo_num);
-	if (!philo)
+	share->philo = (t_philo *)malloc(sizeof(t_philo) * share->arg->philo_num);
+	if (!share->philo)
 		return (0);
 	i = 0;
-	while (i < arg->philo_num)
+	while (i < share->arg->philo_num)
 	{
-		philo[i].num = i;
-		philo[i].l_fork = i;
-		philo[i].r_fork = (i + 1) % arg->philo_num;
-		philo[i].die_time = 0;
-		philo[i].eat_count = 0;
-		philo[i].arg = arg;
-		philo[i].share = share;
+		share->philo[i].share = share;
+		share->philo[i].num = i;
+		share->philo[i].l_fork = i;
+		share->philo[i].r_fork = (i + 1) % share->arg->philo_num;
+		share->philo[i].die_time = 0;
+		share->philo[i].eat_count = 0;
 		i++;
 	}
+	share->tid = (pthread_t *)malloc(share->arg->philo_num * sizeof(pthread_t));
 	return (1);
 }
