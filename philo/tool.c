@@ -6,11 +6,36 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/15 19:59:31 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/16 18:10:38 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+int	valid_input(char **av)
+{
+	int	i;
+	int	j;
+
+	i = 0;
+	j = 0;
+	while (av[i])
+	{
+		while (av[i][j])
+		{
+			if (av[i][j] == ' ')
+			{
+				j++;
+				continue ;
+			}
+			if (!(av[i][j] >= 48 && av[i][j] <= 57))
+				return (0);
+			j++;
+		}
+		i++;
+	}
+	return (1);
+}
 
 int	ft_atoi(const char *str)
 {
@@ -35,7 +60,7 @@ int	ft_atoi(const char *str)
 	return (sign * itgr);
 }
 
-long long	get_time()
+long long	get_time(void)
 {
 	struct timeval	tv;
 

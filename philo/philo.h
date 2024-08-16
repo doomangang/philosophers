@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/15 21:18:47 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/16 18:10:32 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,12 @@ typedef struct s_philo
 	pthread_t	*thread;
 }	t_philo;
 
-int	valid_input(char **av);
-int	set_arg(int ac, char **av, t_arg *arg);
-int	mutex_init(t_share share, int num);
-int	philo_init(t_philo *philo, t_arg *arg, t_share *share);
-int	ft_atoi(const char *str);
+int			valid_input(char **av);
+int			set_arg(int ac, char **av, t_arg *arg);
+int			mutex_init(t_share *share, int num);
+int			philo_init(t_philo *philo, t_arg *arg, t_share *share);
+long long	get_time(void);
+int			ft_atoi(const char *str);
+int	print_error(char *str);
 
 #endif

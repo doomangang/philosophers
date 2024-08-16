@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/15 21:27:10 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/16 18:09:52 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,9 @@ int	main(int ac, char **av)
 		return (0);
 	if (!valid_input(av))
 		return (0);
-	memset(&arg, 0, sizeof(t_arg));
 	if (!set_arg(ac, av, &arg))
 		return (0);
-	if (!mutex_init(share, arg.philo_num))
+	if (!mutex_init(&share, arg.philo_num))
 		return (0);
 	if (!philo_init(philo, &arg, &share))
 		return (0);
@@ -37,33 +36,9 @@ int	main(int ac, char **av)
 	return (0);
 }
 
-int	valid_input(char **av)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (av[i])
-	{
-		while (av[i][j])
-		{
-			if (av[i][j] == ' ')
-			{
-				j++;
-				continue ;
-			}
-			if (!(av[i][j] >= 48 && av[i][j] <= 57))
-				return (0);
-			j++;
-		}
-		i++;
-	}
-	return (1);
-}
-
 int	set_arg(int ac, char **av, t_arg *arg)
 {
+	memset(arg, 0, sizeof(t_arg));
 	arg->philo_num = ft_atoi(av[1]);
 	arg->die_time = ft_atoi(av[2]);
 	arg->eat_time = ft_atoi(av[3]);
@@ -81,24 +56,26 @@ int	set_arg(int ac, char **av, t_arg *arg)
 	return (1);
 }
 
-int	mutex_init(t_share share, int num)
+int	mutex_init(t_share *share, int num)
 {
 	int	i;
 
-	if (!pthread_mutex_init(share.print, NULL))
+	memset(share, 0, sizeof(t_share));
+	if (!pthread_mutex_init(share->print, NULL))
 		return (0);
-	share.fork = (pthread_mutex_t *)malloc(sizeof(num));
-	if (!share.fork)
+	share->fork = (pthread_mutex_t *)malloc(sizeof(num));
+	if (!share->fork)
 		return (0); //free arg(memset) and print?
 	i = 0;
 	while (i < num)
 	{
-		pthread_mutex_init(&(share.fork[i]), NULL);
-		if (!&(share.fork[i]))
+		pthread_mutex_init(&(share->fork[i]), NULL);
+		if (!&(share->fork[i]))
 			return (0);
 		i++;
 	}
-	share.end_flag = 0;
+	share->end_flag = false;
+	share->start_time = get_time();
 	return (1);
 }
 
