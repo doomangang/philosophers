@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/17 17:48:59 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/18 04:09:30 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,6 @@
 # include <string.h>
 # include <pthread.h>
 # include <sys/time.h>
-
-# define IMAX 2147483647
-# define IMIN -2147483648
 
 typedef struct s_arg
 {
@@ -34,10 +31,11 @@ typedef struct s_arg
 typedef struct s_philo
 {
 	struct s_share	*share;
+	pthread_mutex_t	lock;
 	int				num;
 	int				l_fork;
 	int				r_fork;
-	int				die_time;
+	long long		die_when;
 	int				eat_count;
 }	t_philo;
 
@@ -48,6 +46,8 @@ typedef struct s_share
 	pthread_t		*tid;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
+	pthread_mutex_t	lock;
+	// int				*f_table;
 	long long		start_time;
 	int				end_flag;
 }	t_share;
@@ -59,8 +59,9 @@ int			philo_init(t_share *share);
 int			philo(t_share *share);
 int			one_philo(t_share *share);
 void		*routine(void *philo);
-// void		*monitor(void *share);
-// int			exit_process(t_share *share);
+void		*monitor(void *share);
+void		eat(t_philo *p);
+int			exit_process(t_share *share);
 void		print(char *str, t_philo *philo);
 long long	get_time(void);
 int			ft_atoi(const char *str);

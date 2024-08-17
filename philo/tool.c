@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/17 18:39:40 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/18 02:29:04 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,16 +56,28 @@ int	print_error(char *str)
 	return (0);
 }
 
-// int	exit_process(t_share *share)
-// {
+int	exit_process(t_share *share)
+{
+	int	i;
 
-// }
+	i = 0;
+	while (i < share->arg->philo_num)
+	{
+		pthread_mutex_destroy(&share->fork[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&share->print);
+	free(share->philo);
+	free(share->tid);
+	free(share->fork);
+	return (0);
+}
 
 void	print(char *str, t_philo *philo)
 {
 	int	time;
 
-	time = get_time() - philo->share->start_time;
+	time = get_time();
 	pthread_mutex_lock(&(philo->share->print));
 	if (!strcmp(str, "fork"))
 		printf("%d %d has taken a fork\n", time, philo->num);

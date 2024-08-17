@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/17 17:46:52 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/18 04:10:45 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	set_arg(int ac, char **av, t_arg *arg)
 	arg->die_time = ft_atoi(av[2]);
 	arg->eat_time = ft_atoi(av[3]);
 	arg->sleep_time = ft_atoi(av[4]);
+	arg->must_eat = -1;
 	if (ac == 6)
 	{
 		arg->must_eat = ft_atoi(av[5]);
@@ -113,10 +114,11 @@ int	philo_init(t_share *share)
 	while (i < share->arg->philo_num)
 	{
 		share->philo[i].share = share;
+		pthread_mutex_init(&share->philo[i].lock, 0);
 		share->philo[i].num = i;
 		share->philo[i].l_fork = i;
 		share->philo[i].r_fork = (i + 1) % share->arg->philo_num;
-		share->philo[i].die_time = 0;
+		share->philo[i].die_when = 0;
 		share->philo[i].eat_count = 0;
 		i++;
 	}
