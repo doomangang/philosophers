@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/17 18:34:32 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/17 18:47:43 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	philo(t_share *share)
 {
 	// pthread_t	*super;
 	int			i;
-	int			*status;
+	int			status;
 
 	share->start_time = get_time();
 	// if (pthread_create(super, 0, &monitor, &share))
@@ -24,6 +24,7 @@ int	philo(t_share *share)
 	i = 0;
 	while (i < share->arg->philo_num)
 	{
+		share->philo[i].die_time = share->start_time + share->arg->die_time;
 		if (pthread_create(&share->tid[i], 0, &routine, &share->philo[i]))
 			return (0);
 		i++;
@@ -31,11 +32,11 @@ int	philo(t_share *share)
 	i = 0;
 	while (i < share->arg->philo_num)
 	{
-		pthread_join(share->tid[i], (void *)&status);
+		pthread_join(share->tid[i], (void **)&status);
 		i++;
 	}
 	// exit_process(share);
-	return (*status);
+	return (status);
 }
 
 int	one_philo(t_share *share)
@@ -58,7 +59,7 @@ void	*routine(void *philo)
 		usleep(1000);
 	while (!p->share->end_flag)
 	{
-		if (get_time() + p->share->arg->eat_time <= p->die_time)
+		if (!p->share->end_flag && get_time() < p->die_time - p->share->arg->eat_time)
 		{
 			pthread_mutex_lock(&(p->share->fork[p->l_fork]));
 			print("fork", p);
@@ -70,18 +71,18 @@ void	*routine(void *philo)
 			pthread_mutex_unlock(&(p->share->fork[p->r_fork]));
 			p->die_time = get_time() + p->share->arg->die_time;
 		}
-		if (get_time() + p->share->arg->sleep_time <= p->die_time)
+		if (!p->share->end_flag && get_time() < p->die_time - p->share->arg->sleep_time)
 		{
 			print("sleep", p);
 			usleep(p->share->arg->sleep_time);
 		}
-		if (get_time() < p->die_time)
+		if (!p->share->end_flag && get_time() < p->die_time)
 			print("think", p);
-		if (get_time() >= p->die_time)
+		if (!p->share->end_flag && get_time() >= p->die_time)
 		{
 			p->share->end_flag = 1;
 			print("die", p);
-			break;
+			break ;
 		}
 	}
 	return (0);
