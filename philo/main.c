@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/16 21:30:53 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/17 17:46:52 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	main(int ac, char **av)
 
 	if (ac < 5 || ac > 6)
 		return (0);
-	if (!valid_input(av))
+	if (!valid_input(&av[1]))
 		return (0);
 	if (!set_arg(ac, av, &arg))
 		return (0);
@@ -31,7 +31,7 @@ int	main(int ac, char **av)
 		return (one_philo(&share));
 	if (!philo(&share))
 		return (0);
-	exit_process(&share);
+	// exit_process(&share);
 	return (0);
 }
 
@@ -84,7 +84,7 @@ int	mutex_init(t_share *share, t_arg *arg)
 	int	i;
 	int	num;
 
-	if (!pthread_mutex_init(&(share->print), NULL))
+	if (pthread_mutex_init(&(share->print), NULL))
 		return (0);
 	num = arg->philo_num;
 	share->fork = (pthread_mutex_t *)malloc(num * sizeof(pthread_mutex_t));
@@ -93,8 +93,7 @@ int	mutex_init(t_share *share, t_arg *arg)
 	i = 0;
 	while (i < num)
 	{
-		pthread_mutex_init(&(share->fork[i]), NULL);
-		if (!&(share->fork[i]))
+		if (pthread_mutex_init(&(share->fork[i]), NULL))
 			return (0);
 		i++;
 	}

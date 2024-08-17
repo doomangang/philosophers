@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/16 21:42:46 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/17 17:48:59 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,8 +59,9 @@ int			philo_init(t_share *share);
 int			philo(t_share *share);
 int			one_philo(t_share *share);
 void		*routine(void *philo);
-void		*monitor(void *share);
-int			exit_process(t_share *share);
+// void		*monitor(void *share);
+// int			exit_process(t_share *share);
+void		print(char *str, t_philo *philo);
 long long	get_time(void);
 int			ft_atoi(const char *str);
 int			print_error(char *str);
