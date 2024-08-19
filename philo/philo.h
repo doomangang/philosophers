@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/18 04:09:30 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/19 18:05:20 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ typedef struct s_philo
 	int				num;
 	int				l_fork;
 	int				r_fork;
+	int				eating;
 	long long		die_when;
 	int				eat_count;
 }	t_philo;
@@ -47,7 +48,6 @@ typedef struct s_share
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
 	pthread_mutex_t	lock;
-	// int				*f_table;
 	long long		start_time;
 	int				end_flag;
 }	t_share;
