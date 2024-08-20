@@ -126,7 +126,7 @@ void	*monitor(void *share)
 		pthread_mutex_unlock(&(s->lock));
 		i = (i + 1) % s->arg->philo_num;
 	}
-	return (0);
+
 }
 
 void	eat(t_philo *p)
