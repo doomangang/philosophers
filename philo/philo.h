@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/19 18:05:20 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/20 15:15:04 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ typedef struct s_share
 	t_arg			*arg;
 	pthread_t		*tid;
 	pthread_mutex_t	*fork;
+	int				*fork_flag;
 	pthread_mutex_t	print;
 	pthread_mutex_t	lock;
 	long long		start_time;

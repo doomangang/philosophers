@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/18 04:10:45 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/20 16:21:38 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	main(int ac, char **av)
 		return (one_philo(&share));
 	if (!philo(&share))
 		return (0);
-	// exit_process(&share);
+	exit_process(&share);
 	return (0);
 }
 
@@ -89,13 +89,15 @@ int	mutex_init(t_share *share, t_arg *arg)
 		return (0);
 	num = arg->philo_num;
 	share->fork = (pthread_mutex_t *)malloc(num * sizeof(pthread_mutex_t));
-	if (!share->fork)
+	share->fork_flag = (int *)malloc(num * sizeof(int));
+	if (!share->fork || !share->fork_flag)
 		return (0);
 	i = 0;
 	while (i < num)
 	{
 		if (pthread_mutex_init(&(share->fork[i]), NULL))
 			return (0);
+		share->fork_flag[i] = 0;
 		i++;
 	}
 	share->arg = arg;
@@ -118,6 +120,8 @@ int	philo_init(t_share *share)
 		share->philo[i].num = i;
 		share->philo[i].l_fork = i;
 		share->philo[i].r_fork = (i + 1) % share->arg->philo_num;
+		if (share->arg->philo_num == 1)
+					share->philo[i].r_fork = i;
 		share->philo[i].die_when = 0;
 		share->philo[i].eat_count = 0;
 		i++;
