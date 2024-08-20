@@ -41,9 +41,9 @@ int	valid_input(char **av)
 	int	j;
 
 	i = 0;
-	j = 0;
 	while (av[i])
 	{
+		j = 0;
 		while (av[i][j])
 		{
 			if (av[i][j] == ' ')
