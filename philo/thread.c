@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 22:36:43 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 23:07:22 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,18 +40,13 @@ int	philo(t_share *share)
 
 int	one_philo(t_share *share)
 {
-	pthread_t	super;
-
 	share->start_time = get_time();
 	pthread_mutex_lock(&(share->philo[0].lock));
 	share->philo[0].die_when = share->start_time + share->arg->die_time;
 	pthread_mutex_unlock(&(share->philo[0].lock));
 	if (pthread_create(&(share->tid[0]), 0, routine, &(share->philo[0])))
 		return (0);
-	if (pthread_create(&super, 0, monitor, share))
-		return (0);
 	pthread_detach(share->tid[0]);
-	pthread_detach(super);
 	return (1);
 }
 
@@ -72,7 +67,7 @@ void	*routine(void *philo)
 		print(SLEEP, p);
 		ft_usleep(p->share->arg->sleep_time);
 		print(THINK, p);
-		usleep(100);
+		ft_usleep(1);
 	}
 	return (0);
 }
@@ -114,8 +109,8 @@ void	eat(t_philo *p)
 	p->eating = 1;
 	pthread_mutex_unlock(&(p->lock));
 	ft_usleep(p->share->arg->eat_time);
-	pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
 	pthread_mutex_unlock(&(p->share->fork[p->ano_fork]));
+	pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
 	pthread_mutex_lock(&(p->lock));
 	p->eating = 0;
 	p->eat_count += 1;

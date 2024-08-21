@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 22:36:48 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:55:03 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,18 +112,18 @@ int	philo_init(t_share *share)
 		share->philo[i].share = share;
 		pthread_mutex_init(&(share->philo[i].lock), 0);
 		share->philo[i].num = i;
-		if (!i % 2)
-		{
+		// if (!i % 2)
+		// {
 			share->philo[i].one_fork = i;
 			share->philo[i].ano_fork = (i + 1) % share->arg->philo_num;
-		}
-		else
-		{
-			share->philo[i].one_fork = (i + 1) % share->arg->philo_num;
-			share->philo[i].ano_fork = i;
-		}
+		// }
+		// else
+		// {
+		// 	share->philo[i].one_fork = (i + 1) % share->arg->philo_num;
+		// 	share->philo[i].ano_fork = i;
+		// }
 		if (share->arg->philo_num == 1)
-			share->philo[i].one_fork = i;
+			share->philo[i].ano_fork = i;
 		share->philo[i].die_when = 0;
 		share->philo[i].eat_count = 0;
 		i++;
