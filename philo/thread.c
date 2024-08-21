@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 19:20:37 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 19:28:28 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,8 +105,8 @@ void	eat(t_philo *p)
 	print(EAT, p);
 	p->eating = 1;
 	ft_usleep(p->share->arg->eat_time);
-	pthread_mutex_unlock(&(p->share->fork[p->ano_fork]));
 	pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
+	pthread_mutex_unlock(&(p->share->fork[p->ano_fork]));
 	p->eating = 0;
 	p->eat_count += 1;
 	pthread_mutex_unlock(&(p->lock));
