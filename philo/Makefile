@@ -10,7 +10,7 @@ OBJS	= $(SRCS:.c=.o)
 HEADER	= philo.h
 
 CC		= cc
-CFLAGS	= -Wall -Wextra -Werror
+CFLAGS	= -Wall -Wextra -Werror -fsanitize=thread
 INCLUDES= -I.
 
 RM		= rm -f

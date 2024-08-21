@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 18:53:56 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 19:20:37 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int	philo(t_share *share)
 {
-	int			i;
+	int	i;
 
 	share->start_time = get_time();
 	i = 0;
@@ -56,7 +56,7 @@ void	*routine(void *philo)
 	p = (t_philo *)philo;
 	if (pthread_create(&super, 0, monitor, p))
 		return (0);
-	if (!p->num % 2)
+	if (p->num % 2)
 		ft_usleep(1);
 	while (all_alive(p->share))
 	{
@@ -83,7 +83,7 @@ void	*monitor(void *philo)
 
 	p = (t_philo *)philo;
 	must_eat = p->share->arg->must_eat;
-	while (!p->share->end_flag)
+	while (all_alive(p->share))
 	{
 		pthread_mutex_lock(&(p->lock));
 		if (p->die_when <= get_time() && p->eating == 0)
@@ -94,7 +94,6 @@ void	*monitor(void *philo)
 		if (must_eat != -1 && p->eat_count == must_eat)
 			set_dead(p->share);
 		pthread_mutex_unlock(&(p->lock));
-		usleep(10);
 	}
 	return (0);
 }

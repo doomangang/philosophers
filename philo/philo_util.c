@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 19:04:26 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 19:09:56 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,13 +49,6 @@ void	print(int status, t_philo *philo)
 
 void	take_fork(t_philo *p)
 {
-	pthread_mutex_lock(&(p->share->lock));
-	if (p->share->end_flag)
-	{
-		pthread_mutex_unlock(&(p->share->lock));
-		return ;
-	}
-	pthread_mutex_unlock(&(p->share->lock));
 	pthread_mutex_lock(&(p->share->fork[p->one_fork]));
 	print(FORK, p);
 	pthread_mutex_lock(&(p->share->lock));
@@ -73,13 +66,13 @@ void	take_fork(t_philo *p)
 int	all_alive(t_share *share)
 {
 	pthread_mutex_lock(&(share->lock));
-		if (share->end_flag)
-		{
-			pthread_mutex_unlock(&(p->share->lock));
-			return (0);
-		}
-		pthread_mutex_unlock(&(p->share->lock));
-		return (1);
+	if (share->end_flag)
+	{
+		pthread_mutex_unlock(&(share->lock));
+		return (0);
+	}
+	pthread_mutex_unlock(&(share->lock));
+	return (1);
 }
 
 void	set_dead(t_share *share)
