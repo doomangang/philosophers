@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 19:25:14 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:36:48 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,8 @@ int	philo_init(t_share *share)
 {
 	int	i;
 
-	i = -1;
-	while (++i < share->arg->philo_num)
+	i = 0;
+	while (i < share->arg->philo_num)
 	{
 		share->philo[i].share = share;
 		pthread_mutex_init(&(share->philo[i].lock), 0);
@@ -126,6 +126,7 @@ int	philo_init(t_share *share)
 			share->philo[i].one_fork = i;
 		share->philo[i].die_when = 0;
 		share->philo[i].eat_count = 0;
+		i++;
 	}
 	return (1);
 }

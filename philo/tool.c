@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 18:15:15 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:05:03 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,8 @@ void	ft_usleep(long long sleep)
 	long long	start;
 
 	start = get_time();
-	while (get_time() <= start + sleep)
-		usleep(100);
+	while (get_time() <= start + sleep * 1)
+		usleep(10);
 }
 
 int	exit_process(t_share *share)

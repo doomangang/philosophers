@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 19:09:56 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 22:17:49 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,42 +26,20 @@ void	print(int status, t_philo *philo)
 	int	time;
 
 	time = get_time() - philo->share->start_time;
-	pthread_mutex_lock(&(philo->share->lock));
-	if (philo->share->end_flag && status != DIE)
-	{
-		pthread_mutex_unlock(&(philo->share->lock));
-		return ;
-	}
-	pthread_mutex_unlock(&(philo->share->lock));
 	pthread_mutex_lock(&(philo->share->print));
-	if (status == FORK)
+	if (status == FORK && all_alive(philo->share))
 		printf("%d %d has taken a fork\n", time, philo->num);
-	if (status == EAT)
+	else if (status == EAT && all_alive(philo->share))
 		printf("%d %d is eating\n", time, philo->num);
-	if (status == SLEEP)
+	else if (status == SLEEP && all_alive(philo->share))
 		printf("%d %d is sleeping\n", time, philo->num);
-	if (status == THINK)
+	else if (status == THINK && all_alive(philo->share))
 		printf("%d %d is thinking\n", time, philo->num);
-	if (status == DIE)
+	else if (status == DIE)
 		printf("%d %d died\n", time, philo->num);
 	pthread_mutex_unlock(&(philo->share->print));
 }
 
-void	take_fork(t_philo *p)
-{
-	pthread_mutex_lock(&(p->share->fork[p->one_fork]));
-	print(FORK, p);
-	pthread_mutex_lock(&(p->share->lock));
-	if (p->share->end_flag)
-	{
-		pthread_mutex_unlock(&(p->share->lock));
-		pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
-		return ;
-	}
-	pthread_mutex_unlock(&(p->share->lock));
-	pthread_mutex_lock(&(p->share->fork[p->ano_fork]));
-	print(FORK, p);
-}
 
 int	all_alive(t_share *share)
 {
