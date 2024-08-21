@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/20 16:21:38 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:29:48 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ int	main(int ac, char **av)
 	if (!valid_input(&av[1]))
 		return (0);
 	if (!set_arg(ac, av, &arg))
+		return (0);
+	if (!heap_init(&share, arg.philo_num))
 		return (0);
 	if (!mutex_init(&share, &arg))
 		return (0);
@@ -83,21 +85,16 @@ int	set_arg(int ac, char **av, t_arg *arg)
 int	mutex_init(t_share *share, t_arg *arg)
 {
 	int	i;
-	int	num;
 
 	if (pthread_mutex_init(&(share->print), NULL))
 		return (0);
-	num = arg->philo_num;
-	share->fork = (pthread_mutex_t *)malloc(num * sizeof(pthread_mutex_t));
-	share->fork_flag = (int *)malloc(num * sizeof(int));
-	if (!share->fork || !share->fork_flag)
+	if (pthread_mutex_init(&(share->lock), NULL))
 		return (0);
 	i = 0;
-	while (i < num)
+	while (i < arg->philo_num)
 	{
 		if (pthread_mutex_init(&(share->fork[i]), NULL))
 			return (0);
-		share->fork_flag[i] = 0;
 		i++;
 	}
 	share->arg = arg;
@@ -109,23 +106,18 @@ int	philo_init(t_share *share)
 {
 	int	i;
 
-	share->philo = (t_philo *)malloc(sizeof(t_philo) * share->arg->philo_num);
-	if (!share->philo)
-		return (0);
-	i = 0;
-	while (i < share->arg->philo_num)
+	i = -1;
+	while (++i < share->arg->philo_num)
 	{
 		share->philo[i].share = share;
-		pthread_mutex_init(&share->philo[i].lock, 0);
+		pthread_mutex_init(&(share->philo[i].lock), 0);
 		share->philo[i].num = i;
-		share->philo[i].l_fork = i;
-		share->philo[i].r_fork = (i + 1) % share->arg->philo_num;
+			share->philo[i].one_fork = i;
+			share->philo[i].ano_fork = (i + 1) % share->arg->philo_num;
 		if (share->arg->philo_num == 1)
-					share->philo[i].r_fork = i;
+			share->philo[i].one_fork = i;
 		share->philo[i].die_when = 0;
 		share->philo[i].eat_count = 0;
-		i++;
 	}
-	share->tid = (pthread_t *)malloc(share->arg->philo_num * sizeof(pthread_t));
 	return (1);
 }

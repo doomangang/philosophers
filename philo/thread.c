@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/20 20:18:57 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:53:56 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,14 +38,10 @@ int	philo(t_share *share)
 
 int	one_philo(t_share *share)
 {
-	pthread_t	super;
-
 	share->start_time = get_time();
 	pthread_mutex_lock(&(share->philo[0].lock));
 	share->philo[0].die_when = share->start_time + share->arg->die_time;
 	pthread_mutex_unlock(&(share->philo[0].lock));
-	if (pthread_create(&super, 0, monitor, &share))
-		return (0);
 	if (pthread_create(&share->tid[0], 0, routine, &share->philo[0]))
 		return (0);
 	pthread_detach(share->tid[0]);
@@ -56,40 +52,25 @@ void	*routine(void *philo)
 {
 	t_philo		*p;
 	pthread_t	super;
-	int			one_fork;
-	int			other_fork;
 
 	p = (t_philo *)philo;
 	if (pthread_create(&super, 0, monitor, p))
 		return (0);
-	if (p->num % 2)
+	if (!p->num % 2)
+		ft_usleep(1);
+	while (all_alive(p->share))
 	{
-		one_fork = p->l_fork;
-		other_fork = p->r_fork;
-		usleep(1000);
-	}
-	else
-	{
-		one_fork = p->r_fork;
-		other_fork = p->l_fork;
-	}
-	while (1)
-	{
-		pthread_mutex_lock(&(p->share->lock));
-		if (!p->share->end_flag)
-		{
-			pthread_mutex_unlock(&(p->share->lock));
-			pthread_mutex_lock(&(p->share->fork[one_fork]));
-			print("fork", p);
-		}
-		pthread_mutex_lock(&(p->share->lock));
-		if (!p->share->end_flag)
-		{
-			pthread_mutex_unlock(&(p->share->lock));
-			pthread_mutex_lock(&(p->share->fork[other_fork]));
-			print("fork", p);
+		if (all_alive(p->share))
+			take_fork(p);
+		if (all_alive(p->share))
 			eat(p);
+		if (all_alive(p->share))
+		{
+			print(SLEEP, p);
+			ft_usleep(p->share->arg->sleep_time);
 		}
+		if (all_alive(p->share))
+			print(THINK, p);
 	}
 	pthread_join(super, 0);
 	return (0);
@@ -102,22 +83,16 @@ void	*monitor(void *philo)
 
 	p = (t_philo *)philo;
 	must_eat = p->share->arg->must_eat;
-	while (1)
+	while (!p->share->end_flag)
 	{
 		pthread_mutex_lock(&(p->lock));
 		if (p->die_when <= get_time() && p->eating == 0)
 		{
-			pthread_mutex_unlock(&(p->lock));
-			p->share->end_flag = 1;
-			print("die", p);
-			return (0);
+			set_dead(p->share);
+			print(DIE, p);
 		}
 		if (must_eat != -1 && p->eat_count == must_eat)
-		{
-			p->share->end_flag = 1;
-			pthread_mutex_unlock(&(p->lock));
-			return (0);
-		}
+			set_dead(p->share);
 		pthread_mutex_unlock(&(p->lock));
 		usleep(10);
 	}
@@ -128,21 +103,12 @@ void	eat(t_philo *p)
 {
 	pthread_mutex_lock(&(p->lock));
 	p->die_when = get_time() + p->share->arg->die_time;
-	pthread_mutex_unlock(&(p->lock));
-	print("eat", p);
+	print(EAT, p);
 	p->eating = 1;
-	usleep(p->share->arg->eat_time * 1000);
+	ft_usleep(p->share->arg->eat_time);
+	pthread_mutex_unlock(&(p->share->fork[p->ano_fork]));
+	pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
 	p->eating = 0;
-	pthread_mutex_unlock(&(p->share->fork[p->l_fork]));
-	pthread_mutex_unlock(&(p->share->fork[p->r_fork]));
-	pthread_mutex_lock(&(p->lock));
 	p->eat_count += 1;
 	pthread_mutex_unlock(&(p->lock));
-	if (!p->share->end_flag)
-	{
-		print("sleep", p);
-		usleep(p->share->arg->sleep_time * 1000);
-	}
-	if (!p->share->end_flag)
-		print("think", p);
 }

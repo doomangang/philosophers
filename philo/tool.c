@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/18 02:29:04 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/21 18:15:15 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,25 +35,27 @@ int	ft_atoi(const char *str)
 	return (sign * itgr);
 }
 
-long long	get_time(void)
+int	heap_init(t_share *share, int num)
 {
-	struct timeval	tv;
-
-	if (gettimeofday(&tv, NULL))
+	share->fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num);
+	if (!share->fork)
 		return (0);
-	return ((tv.tv_sec * (long long)1000) + (tv.tv_usec / 1000));
+	share->philo = (t_philo *)malloc(sizeof(t_philo) * num);
+	if (!share->philo)
+		return (0);
+	share->tid = (pthread_t *)malloc(num * sizeof(pthread_t));
+	if (!share->tid)
+		return (0);
+	return (1);
 }
 
-int	print_error(char *str)
+void	ft_usleep(long long sleep)
 {
-	int	len;
+	long long	start;
 
-	len = 0;
-	while (str[len])
-		len++;
-	while (len--)
-		write(2, str++, 1);
-	return (0);
+	start = get_time();
+	while (get_time() <= start + sleep)
+		usleep(100);
 }
 
 int	exit_process(t_share *share)
@@ -71,23 +73,4 @@ int	exit_process(t_share *share)
 	free(share->tid);
 	free(share->fork);
 	return (0);
-}
-
-void	print(char *str, t_philo *philo)
-{
-	int	time;
-
-	time = get_time();
-	pthread_mutex_lock(&(philo->share->print));
-	if (!strcmp(str, "fork"))
-		printf("%d %d has taken a fork\n", time, philo->num);
-	if (!strcmp(str, "eat"))
-		printf("%d %d is eating\n", time, philo->num);
-	if (!strcmp(str, "sleep"))
-		printf("%d %d is sleeping\n", time, philo->num);
-	if (!strcmp(str, "think"))
-		printf("%d %d is thinking\n", time, philo->num);
-	if (!strcmp(str, "die"))
-		printf("%d %d died\n", time, philo->num);
-	pthread_mutex_unlock(&(philo->share->print));
 }
