@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 21:33:15 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 22:04:40 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,18 +64,15 @@ void	*routine(void *philo)
 		ft_usleep(500);
 	while (all_alive(p->share))
 	{
-		if (all_alive(p->share))
-			pthread_mutex_lock(&(p->share->fork[p->one_fork]));
-		print(FORK, p);
-		if (all_alive(p->share))
-			pthread_mutex_lock(&(p->share->fork[p->ano_fork]));
+		if (take_fork(p))
+		{
+			eat(p);
+			print(SLEEP, p);
+			ft_usleep(p->share->arg->sleep_time * 1000);
+			print(THINK, p);
+		}
 		else
-			pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
-		print(FORK, p);
-		eat(p);
-		print(SLEEP, p);
-		ft_usleep(p->share->arg->sleep_time * 1000);
-		print(THINK, p);
+			return (0);
 	}
 	return (0);
 }
