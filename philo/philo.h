@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 22:17:58 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:37:25 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ typedef struct s_philo
 	int				eating;
 	long long		die_when;
 	int				eat_count;
+	int				life_span;
 }	t_philo;
 
 typedef struct s_share
@@ -72,7 +73,7 @@ void		print(int status, t_philo *philo);
 long long	get_time(void);
 int			all_alive(t_share *share);
 void		set_dead(t_share *share);
-void		ft_usleep(long long sleep);
+void		ft_usleep(unsigned long long sleep);
 int			ft_atoi(const char *str);
 int			heap_init(t_share *share, int num);
 

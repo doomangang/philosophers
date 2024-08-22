@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 23:19:50 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 16:21:13 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,25 @@ int	heap_init(t_share *share, int num)
 	return (1);
 }
 
-void	ft_usleep(long long sleep)
+unsigned long long	get_utime(void)
 {
 	struct timeval	tv;
-	long long		start;
 
 	if (gettimeofday(&tv, NULL))
 		return (0);
-	
+	return (tv.tv_sec * 1000000 + tv.tv_usec);
+}
+
+void	ft_usleep(unsigned long long sleep)
+{
+	struct timeval			tv;
+	unsigned long long		start;
+
+	if (gettimeofday(&tv, NULL))
+		return ;
+	start = tv.tv_sec * 1000000 + tv.tv_usec;
+	while (get_utime() <= start + sleep)
+		usleep(50);
 }
 
 int	exit_process(t_share *share)
