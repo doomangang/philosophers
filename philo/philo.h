@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 13:51:18 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 22:03:57 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ typedef struct s_share
 	pthread_mutex_t	lock;
 	struct timeval	start;
 	int				end_flag;
-	int				*f_stat;
 }	t_share;
 
 int			valid_input(char **av);
@@ -67,6 +66,7 @@ int			philo_init(t_share *share);
 int			philo(t_share *share);
 int			one_philo(t_share *share);
 void		*routine(void *philo);
+void		*monitor(void *share);
 int			take_fork(t_philo *p);
 void		eat(t_philo *p);
 int			exit_process(t_share *share);
