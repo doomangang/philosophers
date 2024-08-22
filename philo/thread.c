@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 22:04:40 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 22:43:38 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,15 +61,18 @@ void	*routine(void *philo)
 	p->last.tv_usec = p->share->start.tv_usec;
 	pthread_mutex_unlock(&p->lock);
 	if (p->num % 2)
-		ft_usleep(500);
+		print(THINK, p);
 	while (all_alive(p->share))
 	{
 		if (take_fork(p))
 		{
 			eat(p);
 			print(SLEEP, p);
-			ft_usleep(p->share->arg->sleep_time * 1000);
+			if (all_alive(p->share))
+				ft_usleep(p->share->arg->sleep_time * 1000);
 			print(THINK, p);
+			if (all_alive(p->share))
+				ft_usleep(200);
 		}
 		else
 			return (0);
@@ -118,8 +121,8 @@ void	eat(t_philo *p)
 	pthread_mutex_lock(&(p->lock));
 	gettimeofday(&(p->last), 0);
 	p->eating = 1;
-	pthread_mutex_unlock(&(p->lock));
 	ft_usleep(p->share->arg->eat_time * 1000);
+	pthread_mutex_unlock(&(p->lock));
 	pthread_mutex_unlock(&(p->share->fork[p->ano_fork]));
 	pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
 	pthread_mutex_lock(&(p->lock));
