@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 16:59:15 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 21:18:36 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,16 +109,14 @@ int	philo_init(t_share *share)
 	i = 0;
 	while (i < share->arg->philo_num)
 	{
-		share->philo[i].share = share;
-		pthread_mutex_init(&(share->philo[i].lock), 0);
-		share->philo[i].num = i;
-		share->philo[i].one_fork = i;
-		share->philo[i].ano_fork = (i + 1) % share->arg->philo_num;
-		if (share->arg->philo_num == 1)
-			share->philo[i].ano_fork = i;
-		share->philo[i].die_when = 0;
-		share->philo[i].eat_count = 0;
-		share->philo[i].life_span = share->arg->die_time;
+		share->p[i].share = share;
+		pthread_mutex_init(&(share->p[i].lock), 0);
+		share->p[i].num = i;
+		share->p[i].one_fork = i;
+		share->p[i].ano_fork = (i + 1) % share->arg->philo_num;
+		memset(&share->p[i].last, 0, sizeof(struct timeval));
+		share->p[i].eat_count = 0;
+		share->p[i].life_span = share->arg->die_time;
 		i++;
 	}
 	return (1);

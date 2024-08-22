@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 16:37:25 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 20:10:49 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,20 +42,20 @@ typedef struct s_philo
 	int				one_fork;
 	int				ano_fork;
 	int				eating;
-	long long		die_when;
+	struct timeval	last;
 	int				eat_count;
 	int				life_span;
 }	t_philo;
 
 typedef struct s_share
 {
-	t_philo			*philo;
+	t_philo			*p;
 	t_arg			*arg;
 	pthread_t		*tid;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
 	pthread_mutex_t	lock;
-	long long		start_time;
+	struct timeval	start;
 	int				end_flag;
 }	t_share;
 
@@ -70,7 +70,7 @@ void		*monitor(void *share);
 void		eat(t_philo *p);
 int			exit_process(t_share *share);
 void		print(int status, t_philo *philo);
-long long	get_time(void);
+long long	get_time(struct timeval tv);
 int			all_alive(t_share *share);
 void		set_dead(t_share *share);
 void		ft_usleep(unsigned long long sleep);

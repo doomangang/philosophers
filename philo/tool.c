@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 16:21:13 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 19:08:35 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,8 @@ int	heap_init(t_share *share, int num)
 	share->fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num);
 	if (!share->fork)
 		return (0);
-	share->philo = (t_philo *)malloc(sizeof(t_philo) * num);
-	if (!share->philo)
+	share->p = (t_philo *)malloc(sizeof(t_philo) * num);
+	if (!share->p)
 		return (0);
 	share->tid = (pthread_t *)malloc(num * sizeof(pthread_t));
 	if (!share->tid)
@@ -81,7 +81,7 @@ int	exit_process(t_share *share)
 		i++;
 	}
 	pthread_mutex_destroy(&share->print);
-	free(share->philo);
+	free(share->p);
 	free(share->tid);
 	free(share->fork);
 	return (0);

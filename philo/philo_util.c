@@ -6,40 +6,47 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/21 22:17:49 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/22 21:16:06 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	get_time(void)
+long long	get_time(struct timeval tv)
 {
-	struct timeval	tv;
+	struct timeval	now;
+	time_t			sec;
+	time_t			usec;
 
-	if (gettimeofday(&tv, NULL))
-		return (0);
-	return ((tv.tv_sec * (long long)1000) + (tv.tv_usec / 1000));
+	gettimeofday(&now, 0);
+	sec = now.tv_sec - tv.tv_sec;
+	usec = now.tv_usec - tv.tv_usec;
+	return (sec * 1000 + usec / 1000);
 }
 
 void	print(int status, t_philo *philo)
 {
-	int	time;
+	int	i;
 
-	time = get_time() - philo->share->start_time;
+	i = philo->num;
 	pthread_mutex_lock(&(philo->share->print));
-	if (status == FORK && all_alive(philo->share))
-		printf("%d %d has taken a fork\n", time, philo->num);
-	else if (status == EAT && all_alive(philo->share))
-		printf("%d %d is eating\n", time, philo->num);
-	else if (status == SLEEP && all_alive(philo->share))
-		printf("%d %d is sleeping\n", time, philo->num);
-	else if (status == THINK && all_alive(philo->share))
-		printf("%d %d is thinking\n", time, philo->num);
+	if (!all_alive(philo->share) && status != DIE)
+	{
+		pthread_mutex_unlock(&(philo->share->print));
+		return ;
+	}
+	if (status == FORK)
+		printf("%lld %d has taken a fork\n", get_time(philo->share->start), i);
+	else if (status == EAT)
+		printf("%lld %d is eating\n", get_time(philo->share->start), i);
+	else if (status == SLEEP)
+		printf("%lld %d is sleeping\n", get_time(philo->share->start), i);
+	else if (status == THINK)
+		printf("%lld %d is thinking\n", get_time(philo->share->start), i);
 	else if (status == DIE)
-		printf("%d %d died\n", time, philo->num);
+		printf("%lld %d died\n", get_time(philo->share->start), i);
 	pthread_mutex_unlock(&(philo->share->print));
 }
-
 
 int	all_alive(t_share *share)
 {
