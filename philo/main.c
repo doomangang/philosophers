@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 20:56:40 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 22:43:05 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,31 +35,6 @@ int	main(int ac, char **av)
 		return (0);
 	exit_process(&share);
 	return (0);
-}
-
-int	valid_input(char **av)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	while (av[i])
-	{
-		j = 0;
-		while (av[i][j])
-		{
-			if (av[i][j] == ' ')
-			{
-				j++;
-				continue ;
-			}
-			if (!(av[i][j] >= 48 && av[i][j] <= 57))
-				return (0);
-			j++;
-		}
-		i++;
-	}
-	return (1);
 }
 
 int	set_arg(int ac, char **av, t_arg *arg)
@@ -120,5 +95,19 @@ int	philo_init(t_share *share)
 		share->p[i].life_span = share->arg->die_time;
 		i++;
 	}
+	return (1);
+}
+
+int	heap_init(t_share *share, int num)
+{
+	share->fork = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t) * num);
+	if (!share->fork)
+		return (0);
+	share->p = (t_philo *)malloc(sizeof(t_philo) * num);
+	if (!share->p)
+		return (0);
+	share->tid = (pthread_t *)malloc(num * sizeof(pthread_t));
+	if (!share->tid)
+		return (0);
 	return (1);
 }
