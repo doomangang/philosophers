@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 19:31:50 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 19:52:55 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,16 +67,15 @@ int			philo_init(t_share *share);
 int			philo(t_share *share);
 int			one_philo(t_share *share);
 void		*routine(void *philo);
-void		*monitor(void *share);
 void		take_a_fork(t_philo *p, int num);
 void		drop_fork(t_philo *p);
 void		eat(t_philo *p);
 int			exit_process(t_share *share);
-void		print(int status, t_philo *philo);
+void		print(int status, t_philo *philo, long long time);
 long long	timestamp(struct timeval tv);
 int			is_alive(t_philo *p, t_arg arg);
 void		set_dead(t_share *share);
-void		ft_usleep(int status, long long sleep);
+void		ft_usleep(long long sleep);
 int			ft_atoi(const char *str);
 int			heap_init(t_share *share, int num);
 

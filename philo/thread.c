@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 19:41:06 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 20:00:58 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,18 +51,15 @@ void	*routine(void *philo)
 	p = (t_philo *)philo;
 	arg = *(p->share->arg);
 	if (p->num % 2)
-		print(THINK, p);
+		print(THINK, p, timestamp(p->share->start));
 	while (1)
 	{
 		take_a_fork(p, p->left);
 		take_a_fork(p, p->right);
-		if (!is_alive(p, arg))
-			return (0);
 		eat(p);
-		print(SLEEP, p);
-		ft_usleep(is_alive(p, arg), p->share->arg->sleep_time * 1000);
-		print(THINK, p);
-		ft_usleep(is_alive(p, arg), 200);
+		print(SLEEP, p, timestamp(p->share->start));
+		ft_usleep(p->share->arg->sleep_time * 1000);
+		print(THINK, p, timestamp(p->share->start));
 		if (!is_alive(p, arg))
 			return (0);
 	}
@@ -73,12 +70,12 @@ void	eat(t_philo *p)
 {
 	if (!is_alive(p, *(p->share->arg)))
 		return (drop_fork(p));
-	print(EAT, p);
+	print(EAT, p, timestamp(p->share->start));
 	pthread_mutex_lock(&(p->lock));
 	gettimeofday(&p->last, 0);
 	p->eating = 1;
 	pthread_mutex_unlock(&(p->lock));
-	ft_usleep(is_alive(p, *(p->share->arg)), p->share->arg->eat_time * 1000);
+	ft_usleep(p->share->arg->eat_time * 1000);
 	drop_fork(p);
 	pthread_mutex_lock(&(p->lock));
 	p->eating = 0;
