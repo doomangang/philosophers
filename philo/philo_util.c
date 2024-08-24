@@ -6,13 +6,13 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 16:05:38 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 19:39:02 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long long	get_time(struct timeval tv)
+long long	timestamp(struct timeval tv)
 {
 	struct timeval	now;
 	time_t			sec;
@@ -24,31 +24,27 @@ long long	get_time(struct timeval tv)
 	return (sec * 1000 + usec / 1000);
 }
 
-int	take_fork(t_philo *p)
+void	take_a_fork(t_philo *p, int num)
 {
-	pthread_mutex_lock(&p->share->fork[p->one_fork]);
-	while (p->share->f_stat[p->one_fork])
+	pthread_mutex_lock(&p->share->fork[num]);
+	while (p->share->f_stat[num])
 	{
-		pthread_mutex_unlock(&p->share->fork[p->one_fork]);
-		if (!all_alive(p->share))
-			return (0);
-		pthread_mutex_lock(&p->share->fork[p->one_fork]);
+		pthread_mutex_unlock(&p->share->fork[num]);
+		if (!is_alive(p, *(p->share->arg)))
+		{
+			if (num == p->right)
+			{
+				pthread_mutex_lock(&p->share->fork[p->left]);
+				p->share->f_stat[p->left] = 0;
+				pthread_mutex_unlock(&p->share->fork[p->left]);
+			}
+			return ;
+		}
+		pthread_mutex_lock(&p->share->fork[num]);
 	}
-	p->share->f_stat[p->one_fork] = 1;
-	pthread_mutex_unlock(&p->share->fork[p->one_fork]);
+	p->share->f_stat[num] = 1;
+	pthread_mutex_unlock(&p->share->fork[num]);
 	print(FORK, p);
-	pthread_mutex_lock(&p->share->fork[p->ano_fork]);
-	while (p->share->f_stat[p->ano_fork])
-	{
-		pthread_mutex_unlock(&p->share->fork[p->ano_fork]);
-		if (!all_alive(p->share))
-			return (0);
-		pthread_mutex_lock(&p->share->fork[p->ano_fork]);
-	}
-	p->share->f_stat[p->ano_fork] = 1;
-	pthread_mutex_unlock(&p->share->fork[p->ano_fork]);
-	print(FORK, p);
-	return (1);
 }
 
 void	print(int status, t_philo *philo)
@@ -57,33 +53,48 @@ void	print(int status, t_philo *philo)
 
 	i = philo->num;
 	pthread_mutex_lock(&(philo->share->print));
-	if (!all_alive(philo->share) && status != DIE)
+	if (!is_alive(philo, *(philo->share->arg)) && status != DIE)
 	{
 		pthread_mutex_unlock(&(philo->share->print));
 		return ;
 	}
 	if (status == FORK)
-		printf("%lld %d has taken a fork\n", get_time(philo->share->start), i);
+		printf("%lld %d has taken a fork\n", timestamp(philo->share->start), i);
 	else if (status == EAT)
-		printf("%lld %d is eating\n", get_time(philo->share->start), i);
+		printf("%lld %d is eating\n", timestamp(philo->share->start), i);
 	else if (status == SLEEP)
-		printf("%lld %d is sleeping\n", get_time(philo->share->start), i);
+		printf("%lld %d is sleeping\n", timestamp(philo->share->start), i);
 	else if (status == THINK)
-		printf("%lld %d is thinking\n", get_time(philo->share->start), i);
+		printf("%lld %d is thinking\n", timestamp(philo->share->start), i);
 	else if (status == DIE)
-		printf("%lld %d died\n", get_time(philo->share->start), i);
+		printf("%lld %d died\n", timestamp(philo->share->start), i);
 	pthread_mutex_unlock(&(philo->share->print));
 }
 
-int	all_alive(t_share *share)
+int	is_alive(t_philo *p, t_arg arg)
 {
-	pthread_mutex_lock(&(share->lock));
-	if (share->end_flag)
+	pthread_mutex_lock(&p->share->lock);
+	if (p->share->end_flag)
 	{
-		pthread_mutex_unlock(&(share->lock));
+		pthread_mutex_unlock(&p->share->lock);
 		return (0);
 	}
-	pthread_mutex_unlock(&(share->lock));
+	pthread_mutex_unlock(&p->share->lock);
+	pthread_mutex_lock(&(p->lock));
+	if (timestamp(p->last) > arg.die_time && !p->eating)
+	{
+		pthread_mutex_unlock(&(p->lock));
+		set_dead(p->share);
+		print(DIE, p);
+		return (0);
+	}
+	if (arg.must_eat != -1 && p->eat_count == arg.must_eat)
+	{
+		pthread_mutex_unlock(&(p->lock));
+		set_dead(p->share);
+		return (0);
+	}
+	pthread_mutex_unlock(&(p->lock));
 	return (1);
 }
 

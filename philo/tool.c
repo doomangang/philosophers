@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 15:38:37 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 19:20:50 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	heap_init(t_share *share, int num)
 	return (1);
 }
 
-unsigned long long	get_utime(void)
+long long	get_utime(void)
 {
 	struct timeval	tv;
 
@@ -58,10 +58,10 @@ unsigned long long	get_utime(void)
 	return (tv.tv_sec * 1000000 + tv.tv_usec);
 }
 
-void	ft_usleep(int status, unsigned long long sleep)
+void	ft_usleep(int status, long long sleep)
 {
-	struct timeval			tv;
-	unsigned long long		start;
+	struct timeval	tv;
+	long long		start;
 
 	if (!status)
 		return ;
@@ -77,7 +77,7 @@ int	exit_process(t_share *share)
 	int	i;
 
 	i = 0;
-	while (i < share->arg->philo_num)
+	while (i < share->arg->p_cnt)
 	{
 		pthread_mutex_destroy(&share->fork[i]);
 		i++;

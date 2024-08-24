@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 15:38:48 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 19:31:50 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 
 typedef struct s_arg
 {
-	int	philo_num;
+	int	p_cnt;
 	int	die_time;
 	int	eat_time;
 	int	sleep_time;
@@ -39,8 +39,8 @@ typedef struct s_philo
 	struct s_share	*share;
 	pthread_mutex_t	lock;
 	int				num;
-	int				one_fork;
-	int				ano_fork;
+	int				left;
+	int				right;
 	int				eating;
 	struct timeval	last;
 	int				eat_count;
@@ -68,14 +68,15 @@ int			philo(t_share *share);
 int			one_philo(t_share *share);
 void		*routine(void *philo);
 void		*monitor(void *share);
-int			take_fork(t_philo *p);
+void		take_a_fork(t_philo *p, int num);
+void		drop_fork(t_philo *p);
 void		eat(t_philo *p);
 int			exit_process(t_share *share);
 void		print(int status, t_philo *philo);
-long long	get_time(struct timeval tv);
-int			all_alive(t_share *share);
+long long	timestamp(struct timeval tv);
+int			is_alive(t_philo *p, t_arg arg);
 void		set_dead(t_share *share);
-void		ft_usleep(int status, unsigned long long sleep);
+void		ft_usleep(int status, long long sleep);
 int			ft_atoi(const char *str);
 int			heap_init(t_share *share, int num);
 
