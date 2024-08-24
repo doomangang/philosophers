@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 19:24:09 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 20:56:40 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,8 +113,8 @@ int	philo_init(t_share *share)
 		share->p[i].share = share;
 		pthread_mutex_init(&(share->p[i].lock), 0);
 		share->p[i].num = i;
-		share->p[i].left = i;
-		share->p[i].right = (i + 1) % share->arg->p_cnt;
+		share->p[i].one = i;
+		share->p[i].other = (i + 1) % share->arg->p_cnt;
 		memset(&share->p[i].last, 0, sizeof(struct timeval));
 		share->p[i].eat_count = 0;
 		share->p[i].life_span = share->arg->die_time;

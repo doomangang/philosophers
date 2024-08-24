@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 20:00:39 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 20:29:02 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@ void	take_a_fork(t_philo *p, int num)
 		pthread_mutex_unlock(&p->share->fork[num]);
 		if (!is_alive(p, *(p->share->arg)))
 		{
-			if (num == p->right)
+			if (num == p->other)
 			{
-				pthread_mutex_lock(&p->share->fork[p->left]);
-				p->share->f_stat[p->left] = 0;
-				pthread_mutex_unlock(&p->share->fork[p->left]);
+				pthread_mutex_lock(&p->share->fork[p->one]);
+				p->share->f_stat[p->one] = 0;
+				pthread_mutex_unlock(&p->share->fork[p->one]);
 			}
 			return ;
 		}

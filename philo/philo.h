@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 19:52:55 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 20:29:02 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ typedef struct s_philo
 	struct s_share	*share;
 	pthread_mutex_t	lock;
 	int				num;
-	int				left;
-	int				right;
+	int				one;
+	int				other;
 	int				eating;
 	struct timeval	last;
 	int				eat_count;

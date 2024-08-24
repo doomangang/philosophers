@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 20:00:58 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 20:59:28 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,6 @@ int	philo(t_share *share)
 	int			i;
 
 	gettimeofday(&share->start, 0);
-	i = -1;
-	while (++i < share->arg->p_cnt)
-		share->p[i].last = share->start;
 	i = 0;
 	while (i < share->arg->p_cnt)
 	{
@@ -46,21 +43,23 @@ int	one_philo(t_share *share)
 void	*routine(void *philo)
 {
 	t_philo		*p;
-	t_arg		arg;
 
 	p = (t_philo *)philo;
-	arg = *(p->share->arg);
+	p->last = p->share->start;
 	if (p->num % 2)
+	{
 		print(THINK, p, timestamp(p->share->start));
+		ft_usleep(500);
+	}
 	while (1)
 	{
-		take_a_fork(p, p->left);
-		take_a_fork(p, p->right);
+		take_a_fork(p, p->one);
+		take_a_fork(p, p->other);
 		eat(p);
 		print(SLEEP, p, timestamp(p->share->start));
 		ft_usleep(p->share->arg->sleep_time * 1000);
 		print(THINK, p, timestamp(p->share->start));
-		if (!is_alive(p, arg))
+		if (!is_alive(p, *(p->share->arg)))
 			return (0);
 	}
 	return (0);
@@ -85,10 +84,10 @@ void	eat(t_philo *p)
 
 void	drop_fork(t_philo *p)
 {
-	pthread_mutex_lock(&(p->share->fork[p->right]));
-	p->share->f_stat[p->right] = 0;
-	pthread_mutex_unlock(&(p->share->fork[p->right]));
-	pthread_mutex_lock(&(p->share->fork[p->left]));
-	p->share->f_stat[p->left] = 0;
-	pthread_mutex_unlock(&(p->share->fork[p->left]));
+	pthread_mutex_lock(&(p->share->fork[p->other]));
+	p->share->f_stat[p->other] = 0;
+	pthread_mutex_unlock(&(p->share->fork[p->other]));
+	pthread_mutex_lock(&(p->share->fork[p->one]));
+	p->share->f_stat[p->one] = 0;
+	pthread_mutex_unlock(&(p->share->fork[p->one]));
 }

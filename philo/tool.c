@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 19:49:26 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 20:22:57 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ void	ft_usleep(long long sleep)
 	start = tv.tv_sec * 1000000 + tv.tv_usec;
 	while (tv.tv_sec * 1000000 + tv.tv_usec <= start + sleep)
 	{
-		usleep(50);
+		usleep(100);
 		if (gettimeofday(&tv, NULL))
 			return ;
 	}
