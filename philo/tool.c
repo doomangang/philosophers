@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 19:08:35 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 15:38:37 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,11 +58,13 @@ unsigned long long	get_utime(void)
 	return (tv.tv_sec * 1000000 + tv.tv_usec);
 }
 
-void	ft_usleep(unsigned long long sleep)
+void	ft_usleep(int status, unsigned long long sleep)
 {
 	struct timeval			tv;
 	unsigned long long		start;
 
+	if (!status)
+		return ;
 	if (gettimeofday(&tv, NULL))
 		return ;
 	start = tv.tv_sec * 1000000 + tv.tv_usec;

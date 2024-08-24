@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 21:18:36 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 15:21:30 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,7 @@ int	mutex_init(t_share *share, t_arg *arg)
 	}
 	share->arg = arg;
 	share->end_flag = 0;
+	memset(share->f_stat, 0, sizeof(int) * share->arg->philo_num);
 	return (1);
 }
 

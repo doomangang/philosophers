@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 22:03:57 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 15:38:48 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ typedef struct s_share
 	pthread_mutex_t	lock;
 	struct timeval	start;
 	int				end_flag;
+	int				*f_stat;
 }	t_share;
 
 int			valid_input(char **av);
@@ -74,7 +75,7 @@ void		print(int status, t_philo *philo);
 long long	get_time(struct timeval tv);
 int			all_alive(t_share *share);
 void		set_dead(t_share *share);
-void		ft_usleep(unsigned long long sleep);
+void		ft_usleep(int status, unsigned long long sleep);
 int			ft_atoi(const char *str);
 int			heap_init(t_share *share, int num);
 
