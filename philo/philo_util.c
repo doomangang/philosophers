@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/22 22:59:47 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 14:15:20 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@ long long	get_time(struct timeval tv)
 
 int	take_fork(t_philo *p)
 {
-	if (all_alive(p->share))
+	if (all_alive(p->share) && p->share->f_stat[p->one_fork])
 		pthread_mutex_lock(&(p->share->fork[p->one_fork]));
+	else
+		return (0);
 	print(FORK, p);
 	if (all_alive(p->share) && p->share->arg->philo_num > 1)
 		pthread_mutex_lock(&(p->share->fork[p->ano_fork]));
