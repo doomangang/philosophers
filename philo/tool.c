@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 22:44:21 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/25 16:56:05 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,7 @@ int	exit_process(t_share *share)
 	free(share->p);
 	free(share->tid);
 	free(share->fork);
+	free(share->f_stat);
 	return (0);
 }
 
