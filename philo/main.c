@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 22:43:05 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/24 22:53:02 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,9 @@ int	heap_init(t_share *share, int num)
 		return (0);
 	share->tid = (pthread_t *)malloc(num * sizeof(pthread_t));
 	if (!share->tid)
+		return (0);
+	share->f_stat = (int *)malloc(num * sizeof(int));
+	if (!share->f_stat)
 		return (0);
 	return (1);
 }
