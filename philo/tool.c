@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 16:56:05 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/25 17:19:53 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ int	exit_process(t_share *share)
 	int	i;
 
 	i = 0;
-	while (i < share->arg->p_cnt)
+	while (i < share->arg->philo_num)
 	{
 		pthread_mutex_destroy(&share->fork[i]);
 		i++;
@@ -74,23 +74,23 @@ int	exit_process(t_share *share)
 	free(share->p);
 	free(share->tid);
 	free(share->fork);
-	free(share->f_stat);
+	free(share->fork_up);
 	return (0);
 }
 
 void	ft_usleep(long sleep)
 {
 	struct timeval	tv;
-	long			start;
+	long			time_to_end;
 
 	if (gettimeofday(&tv, NULL))
 		return ;
-	start = tv.tv_sec * 1000000 + tv.tv_usec;
+	time_to_end = tv.tv_sec * 1000000 + tv.tv_usec + sleep;
 	while (1)
 	{
 		if (gettimeofday(&tv, NULL))
 			return ;
-		if (tv.tv_sec * 1000000 + tv.tv_usec > start + sleep)
+		if (tv.tv_sec * 1000000 + tv.tv_usec > time_to_end)
 			return ;
 		usleep(100);
 	}

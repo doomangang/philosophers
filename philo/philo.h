@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/24 22:46:01 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/25 17:10:29 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@
 
 typedef struct s_arg
 {
-	int	p_cnt;
+	int	philo_num;
 	int	die_time;
 	int	eat_time;
 	int	sleep_time;
@@ -37,14 +37,13 @@ typedef struct s_arg
 typedef struct s_philo
 {
 	struct s_share	*share;
+	struct timeval	last_meal;
 	pthread_mutex_t	lock;
 	int				num;
-	int				one;
-	int				other;
+	int				one_fork;
+	int				other_fork;
 	int				eating;
-	struct timeval	last;
 	int				eat_count;
-	int				life_span;
 }	t_philo;
 
 typedef struct s_share
@@ -54,10 +53,10 @@ typedef struct s_share
 	pthread_t		*tid;
 	pthread_mutex_t	*fork;
 	pthread_mutex_t	print;
-	pthread_mutex_t	lock;
-	struct timeval	start;
+	pthread_mutex_t	end_lock;
+	struct timeval	start_time;
 	int				end_flag;
-	int				*f_stat;
+	int				*fork_up;
 }	t_share;
 
 int			set_arg(int ac, char **av, t_arg *arg);
@@ -71,7 +70,7 @@ void		*monitor(void *share);
 void		eat(t_philo *p);
 void		take_a_fork(t_philo *p, int num);
 void		drop_fork(t_philo *p);
-void		print(int status, t_philo *philo);
+void		print(int status, int i, t_share *share);
 int			all_alive(t_share *share);
 void		set_dead(t_share *share);
 int			valid_input(char **av);
