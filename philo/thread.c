@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 18:39:01 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:41:03 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,8 @@ void	*routine(void *philo)
 			return (0);
 		ft_usleep(share->arg->sleep_time * 1000);
 		print(THINK, p->num, share);
-		if (!all_alive(share))
-			return (0);
-		ft_usleep(200);
+		if (all_alive(share))
+			ft_usleep(200);
 	}
 	return (0);
 }
@@ -84,7 +83,7 @@ void	*monitor(void *share)
 
 	s = (t_share *)share;
 	i = 0;
-	while (1)
+	while (all_alive(s))
 	{
 		pthread_mutex_lock(&(s->p[i].lock));
 		if (timestamp(s->p[i].last_meal) >= s->arg->die_time && !s->p[i].eating)
@@ -94,12 +93,12 @@ void	*monitor(void *share)
 			print(DIE, i, share);
 			return (0);
 		}
-		if (s->arg->must_eat != -1 && s->p[i].eat_count == s->arg->must_eat)
-		{
-			pthread_mutex_unlock(&(s->p[i].lock));
-			set_dead(s);
-			return (0);
-		}
+		// if (s->arg->must_eat != -1 && eat_check(share))
+		// {
+		// 	pthread_mutex_unlock(&(s->p[i].lock));
+		// 	set_dead(s);
+		// 	return (0);
+		// }
 		pthread_mutex_unlock(&(s->p[i].lock));
 		i = (i + 1) % s->arg->philo_num;
 	}
@@ -109,14 +108,26 @@ void	*monitor(void *share)
 void	eat(t_philo *p)
 {
 	if (!all_alive(p->share))
-		return (drop_fork(p));
+	{
+		pthread_mutex_lock(&(p->share->fork[p->other_fork]));
+		p->share->fork_up[p->other_fork] = 0;
+		pthread_mutex_unlock(&(p->share->fork[p->other_fork]));
+		pthread_mutex_lock(&(p->share->fork[p->one_fork]));
+		p->share->fork_up[p->one_fork] = 0;
+		pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
+	}
 	print(EAT, p->num, p->share);
 	pthread_mutex_lock(&(p->lock));
 	p->eating = 1;
 	gettimeofday(&p->last_meal, 0);
 	pthread_mutex_unlock(&(p->lock));
 	ft_usleep(p->share->arg->eat_time * 1000);
-	drop_fork(p);
+	pthread_mutex_lock(&(p->share->fork[p->other_fork]));
+	p->share->fork_up[p->other_fork] = 0;
+	pthread_mutex_unlock(&(p->share->fork[p->other_fork]));
+	pthread_mutex_lock(&(p->share->fork[p->one_fork]));
+	p->share->fork_up[p->one_fork] = 0;
+	pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
 	pthread_mutex_lock(&(p->lock));
 	p->eating = 0;
 	p->eat_count += 1;

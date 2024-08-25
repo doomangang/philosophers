@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 17:10:29 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:15:26 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void		*routine(void *philo);
 void		*monitor(void *share);
 void		eat(t_philo *p);
 void		take_a_fork(t_philo *p, int num);
-void		drop_fork(t_philo *p);
+int			eat_check(t_share *share);
 void		print(int status, int i, t_share *share);
 int			all_alive(t_share *share);
 void		set_dead(t_share *share);

@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 17:10:08 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/25 21:32:00 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,14 +39,25 @@ void	take_a_fork(t_philo *p, int num)
 	}
 }
 
-void	drop_fork(t_philo *p)
+int	eat_check(t_share *share)
 {
-	pthread_mutex_lock(&(p->share->fork[p->other_fork]));
-	p->share->fork_up[p->other_fork] = 0;
-	pthread_mutex_unlock(&(p->share->fork[p->other_fork]));
-	pthread_mutex_lock(&(p->share->fork[p->one_fork]));
-	p->share->fork_up[p->one_fork] = 0;
-	pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
+	int	i;
+	int	eat_count;
+
+	if (share->arg->must_eat == -1)
+		return (0);
+	i = 0;
+	while (i < share->arg->philo_num)
+	{
+		pthread_mutex_lock(&(share->p[i].lock));
+		eat_count = share->p[i].eat_count;
+		pthread_mutex_unlock(&(share->p[i].lock));
+		if (eat_count < share->arg->must_eat)
+			return (0);
+		i++;
+	}
+	set_dead(share);
+	return (1);
 }
 
 void	print(int status, int i, t_share *share)
