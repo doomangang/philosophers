@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 17:10:08 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/25 18:52:33 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@ int	main(int ac, char **av)
 	t_share	share;
 
 	if (ac < 5 || ac > 6)
-		return (0);
+		return (printf("Argument number be 4 or 5 : %d\n", ac - 1));
 	if (!valid_input(&av[1]))
-		return (0);
+		return (printf("Error : Argument format error\n"));
 	if (!set_arg(ac, av, &arg))
-		return (0);
+		return (printf("Error : Wrong philo or time input\n"));
 	if (!heap_init(&share, arg.philo_num))
-		return (0);
+		return (printf("malloc error\n"));
 	if (!mutex_init(&share, &arg))
-		return (0);
+		return (printf("mutex initiation error\n"));
 	if (!philo_init(&share))
-		return (0);
+		return (printf("philo initiation error\n"));
 	if (arg.philo_num == 1)
 		return (one_philo(&share));
 	if (!philo(&share))
@@ -86,7 +86,8 @@ int	philo_init(t_share *share)
 	while (i < share->arg->philo_num)
 	{
 		share->p[i].share = share;
-		pthread_mutex_init(&(share->p[i].lock), 0);
+		if (pthread_mutex_init(&(share->p[i].lock), 0))
+			return (0);
 		share->p[i].num = i;
 		share->p[i].one_fork = i;
 		share->p[i].other_fork = (i + 1) % share->arg->philo_num;

@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 17:49:06 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/25 18:39:01 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ int	philo(t_share *share)
 	while (i < share->arg->philo_num)
 	{
 		if (pthread_create(&share->tid[i], 0, routine, &share->p[i]))
-			return (0);
+			return (exit_process(share));
 		i++;
 	}
 	if (pthread_create(&super, 0, monitor, share))
-		return (0);
+		return (exit_process(share));
 	i = -1;
 	while (++i < share->arg->philo_num)
 		pthread_join(share->tid[i], 0);
@@ -41,9 +41,9 @@ int	one_philo(t_share *share)
 	gettimeofday(&share->start_time, 0);
 	share->p[0].last_meal = share->start_time;
 	if (pthread_create(&(share->tid[0]), 0, routine, &(share->p[0])))
-		return (0);
+		return (exit_process(share));
 	if (pthread_create(&super, 0, monitor, share))
-		return (0);
+		return (exit_process(share));
 	pthread_join(share->tid[0], 0);
 	pthread_join(super, 0);
 	return (1);
