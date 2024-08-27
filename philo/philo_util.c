@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 21:32:00 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/27 20:42:50 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ int	eat_check(t_share *share)
 			return (0);
 		i++;
 	}
-	set_dead(share);
 	return (1);
 }
 

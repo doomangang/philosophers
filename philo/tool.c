@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 17:19:53 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/27 21:45:00 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ int	exit_process(t_share *share)
 	free(share->tid);
 	free(share->fork);
 	free(share->fork_up);
-	return (0);
+	return (1);
 }
 
 void	ft_usleep(long sleep)

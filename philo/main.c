@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 18:52:33 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/27 21:52:25 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,13 +26,13 @@ int	main(int ac, char **av)
 	if (!heap_init(&share, arg.philo_num))
 		return (printf("malloc error\n"));
 	if (!mutex_init(&share, &arg))
-		return (printf("mutex initiation error\n"));
+		return (exit_process(&share));
 	if (!philo_init(&share))
-		return (printf("philo initiation error\n"));
+		return (exit_process(&share));
 	if (arg.philo_num == 1)
 		return (one_philo(&share));
 	if (!philo(&share))
-		return (0);
+		return (exit_process(&share));
 	exit_process(&share);
 	return (0);
 }
@@ -92,6 +92,7 @@ int	philo_init(t_share *share)
 		share->p[i].one_fork = i;
 		share->p[i].other_fork = (i + 1) % share->arg->philo_num;
 		memset(&share->p[i].last_meal, 0, sizeof(struct timeval));
+		share->p[i].eating = 0;
 		share->p[i].eat_count = 0;
 		i++;
 	}

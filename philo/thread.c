@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/25 21:41:03 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/27 21:44:01 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ int	philo(t_share *share)
 	while (i < share->arg->philo_num)
 	{
 		if (pthread_create(&share->tid[i], 0, routine, &share->p[i]))
-			return (exit_process(share));
+			return (0);
 		i++;
 	}
 	if (pthread_create(&super, 0, monitor, share))
-		return (exit_process(share));
+		return (0);
 	i = -1;
 	while (++i < share->arg->philo_num)
 		pthread_join(share->tid[i], 0);
@@ -46,7 +46,8 @@ int	one_philo(t_share *share)
 		return (exit_process(share));
 	pthread_join(share->tid[0], 0);
 	pthread_join(super, 0);
-	return (1);
+	exit_process(share);
+	return (0);
 }
 
 void	*routine(void *philo)
@@ -83,7 +84,7 @@ void	*monitor(void *share)
 
 	s = (t_share *)share;
 	i = 0;
-	while (all_alive(s))
+	while (1)
 	{
 		pthread_mutex_lock(&(s->p[i].lock));
 		if (timestamp(s->p[i].last_meal) >= s->arg->die_time && !s->p[i].eating)
@@ -93,13 +94,12 @@ void	*monitor(void *share)
 			print(DIE, i, share);
 			return (0);
 		}
-		// if (s->arg->must_eat != -1 && eat_check(share))
-		// {
-		// 	pthread_mutex_unlock(&(s->p[i].lock));
-		// 	set_dead(s);
-		// 	return (0);
-		// }
 		pthread_mutex_unlock(&(s->p[i].lock));
+		if (eat_check(share))
+		{
+			set_dead(s);
+			return (0);
+		}
 		i = (i + 1) % s->arg->philo_num;
 	}
 	return (0);
