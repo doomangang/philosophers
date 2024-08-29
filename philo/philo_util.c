@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 14:14:46 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/27 21:59:18 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:06:00 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,15 +68,15 @@ void	print(int status, int i, t_share *share)
 		return ;
 	}
 	if (status == FORK)
-		printf("%ld %d has taken a fork\n", timestamp(share->start_time), i);
+		printf("%lld %d has taken a fork\n", gettime(&share->start_time), i);
 	else if (status == EAT)
-		printf("%ld %d is eating\n", timestamp(share->start_time), i);
+		printf("%lld %d is eating\n", gettime(&share->start_time), i);
 	else if (status == SLEEP)
-		printf("%ld %d is sleeping\n", timestamp(share->start_time), i);
+		printf("%lld %d is sleeping\n", gettime(&share->start_time), i);
 	else if (status == THINK)
-		printf("%ld %d is thinking\n", timestamp(share->start_time), i);
+		printf("%lld %d is thinking\n", gettime(&share->start_time), i);
 	else if (status == DIE)
-		printf("%ld %d died\n", timestamp(share->start_time), i);
+		printf("%lld %d died\n", gettime(&share->start_time), i);
 	pthread_mutex_unlock(&(share->print));
 }
 

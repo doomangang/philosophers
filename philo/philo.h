@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/27 20:40:20 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:06:00 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@
 
 typedef struct s_arg
 {
-	int	philo_num;
-	int	die_time;
-	int	eat_time;
-	int	sleep_time;
-	int	must_eat;
+	int		philo_num;
+	long long	die_time;
+	long long	eat_time;
+	long long	sleep_time;
+	int		must_eat;
 }	t_arg;
 
 typedef struct s_philo
@@ -74,8 +74,8 @@ void		print(int status, int i, t_share *share);
 int			all_alive(t_share *share);
 void		set_dead(t_share *share);
 int			valid_input(char **av);
-long		timestamp(struct timeval tv);
-void		ft_usleep(long sleep);
+long long	gettime(struct timeval *tv);
+void		ft_usleep(long long sleep);
 int			ft_atoi(const char *str);
 int			exit_process(t_share *share);
 
