@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/29 16:06:00 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:49:11 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@
 
 typedef struct s_arg
 {
-	int		philo_num;
+	int			philo_num;
 	long long	die_time;
 	long long	eat_time;
 	long long	sleep_time;
-	int		must_eat;
+	int			must_eat;
 }	t_arg;
 
 typedef struct s_philo

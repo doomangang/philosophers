@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/29 16:37:19 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:47:41 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	*routine(void *philo)
 	p = (t_philo *)philo;
 	share = p->share;
 	p->last_meal = share->start_time;
-	ft_usleep(1);
 	print(THINK, p->num, share);
 	if (p->num % 2)
 		ft_usleep(10000);

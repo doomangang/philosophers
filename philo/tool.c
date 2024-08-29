@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/15 15:53:53 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/29 16:06:00 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/29 16:49:23 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ int	exit_process(t_share *share)
 void	ft_usleep(long long sleep)
 {
 	struct timeval	tv;
-	long long			time_to_end;
+	long long		time_to_end;
 
 	if (gettimeofday(&tv, NULL))
 		return ;
