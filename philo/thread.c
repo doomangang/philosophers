@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/29 16:47:41 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/29 17:47:04 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@ int	philo(t_share *share)
 	i = 0;
 	while (i < share->arg->philo_num)
 	{
+		pthread_mutex_lock(&share->p[i].lock);
+		share->p[i].last_meal = share->start_time;
+		pthread_mutex_unlock(&share->p[i].lock);
 		if (pthread_create(&share->tid[i], 0, routine, &share->p[i]))
 			return (0);
 		i++;
@@ -39,6 +42,9 @@ int	one_philo(t_share *share)
 	pthread_t	super;
 
 	gettimeofday(&share->start_time, 0);
+	pthread_mutex_lock(&share->p[0].lock);
+	share->p[0].last_meal = share->start_time;
+	pthread_mutex_unlock(&share->p[0].lock);
 	if (pthread_create(&(share->tid[0]), 0, routine, &(share->p[0])))
 		return (exit_process(share));
 	if (pthread_create(&super, 0, monitor, share))
@@ -56,7 +62,6 @@ void	*routine(void *philo)
 
 	p = (t_philo *)philo;
 	share = p->share;
-	p->last_meal = share->start_time;
 	print(THINK, p->num, share);
 	if (p->num % 2)
 		ft_usleep(10000);
@@ -100,6 +105,7 @@ void	*monitor(void *share)
 			return (0);
 		}
 		i = (i + 1) % s->arg->philo_num;
+		ft_usleep(20);
 	}
 	return (0);
 }
