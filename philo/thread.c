@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/30 17:24:20 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/30 17:29:29 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,8 @@ void	*routine(void *philo)
 		print(THINK, p->num, share);
 		if (all_alive(share))
 			ft_usleep(200);
+		else
+			return (0);
 	}
 	return (0);
 }
