@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:40:12 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/29 16:49:11 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/30 17:21:17 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,11 +64,11 @@ int			mutex_init(t_share *share, t_arg *arg);
 int			philo_init(t_share *share);
 int			heap_init(t_share *share, int num);
 int			philo(t_share *share);
-int			one_philo(t_share *share);
 void		*routine(void *philo);
 void		*monitor(void *share);
 void		eat(t_philo *p);
 void		take_a_fork(t_philo *p, int num);
+void		drop_forks(t_philo *philo);
 int			eat_check(t_share *share);
 void		print(int status, int i, t_share *share);
 int			all_alive(t_share *share);

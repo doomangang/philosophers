@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/01 14:39:48 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/29 17:07:37 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/30 17:17:59 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int	main(int ac, char **av)
 		return (exit_process(&share));
 	if (!philo_init(&share))
 		return (exit_process(&share));
-	if (arg.philo_num == 1)
-		return (one_philo(&share));
 	if (!philo(&share))
 		return (exit_process(&share));
 	exit_process(&share);

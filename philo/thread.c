@@ -6,7 +6,7 @@
 /*   By: jihyjeon <jihyjeon@student.42seoul.kr>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/16 18:12:06 by jihyjeon          #+#    #+#             */
-/*   Updated: 2024/08/29 17:47:04 by jihyjeon         ###   ########.fr       */
+/*   Updated: 2024/08/30 17:24:20 by jihyjeon         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,24 +35,6 @@ int	philo(t_share *share)
 		pthread_join(share->tid[i], 0);
 	pthread_join(super, 0);
 	return (1);
-}
-
-int	one_philo(t_share *share)
-{
-	pthread_t	super;
-
-	gettimeofday(&share->start_time, 0);
-	pthread_mutex_lock(&share->p[0].lock);
-	share->p[0].last_meal = share->start_time;
-	pthread_mutex_unlock(&share->p[0].lock);
-	if (pthread_create(&(share->tid[0]), 0, routine, &(share->p[0])))
-		return (exit_process(share));
-	if (pthread_create(&super, 0, monitor, share))
-		return (exit_process(share));
-	pthread_join(share->tid[0], 0);
-	pthread_join(super, 0);
-	exit_process(share);
-	return (0);
 }
 
 void	*routine(void *philo)
@@ -114,12 +96,8 @@ void	eat(t_philo *p)
 {
 	if (!all_alive(p->share))
 	{
-		pthread_mutex_lock(&(p->share->fork[p->other_fork]));
-		p->share->fork_up[p->other_fork] = 0;
-		pthread_mutex_unlock(&(p->share->fork[p->other_fork]));
-		pthread_mutex_lock(&(p->share->fork[p->one_fork]));
-		p->share->fork_up[p->one_fork] = 0;
-		pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
+		drop_forks(p);
+		return ;
 	}
 	print(EAT, p->num, p->share);
 	pthread_mutex_lock(&(p->lock));
@@ -127,14 +105,22 @@ void	eat(t_philo *p)
 	gettimeofday(&p->last_meal, 0);
 	pthread_mutex_unlock(&(p->lock));
 	ft_usleep(p->share->arg->eat_time * 1000);
-	pthread_mutex_lock(&(p->share->fork[p->other_fork]));
-	p->share->fork_up[p->other_fork] = 0;
-	pthread_mutex_unlock(&(p->share->fork[p->other_fork]));
-	pthread_mutex_lock(&(p->share->fork[p->one_fork]));
-	p->share->fork_up[p->one_fork] = 0;
-	pthread_mutex_unlock(&(p->share->fork[p->one_fork]));
+	drop_forks(p);
 	pthread_mutex_lock(&(p->lock));
 	p->eating = 0;
 	p->eat_count += 1;
 	pthread_mutex_unlock(&(p->lock));
+}
+
+void	drop_forks(t_philo *philo)
+{
+	t_share	*share;
+
+	share = philo->share;
+	pthread_mutex_lock(&(share->fork[philo->other_fork]));
+	share->fork_up[philo->other_fork] = 0;
+	pthread_mutex_unlock(&(share->fork[philo->other_fork]));
+	pthread_mutex_lock(&(share->fork[philo->one_fork]));
+	share->fork_up[philo->one_fork] = 0;
+	pthread_mutex_unlock(&(share->fork[philo->one_fork]));
 }
